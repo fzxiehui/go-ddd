@@ -1,18 +1,34 @@
 package server
 
-import "github.com/gin-gonic/gin"
+import (
+	"context"
+	"log"
+	"net/http"
+)
 
 type Server struct {
-	HTTP *gin.Engine
+	HTTP *http.Server
 	// GRPC *grpc.Server   // TODO
 }
 
-func NewServer(http *gin.Engine) *Server {
+func NewServer(httpSrv *http.Server) *Server {
 	return &Server{
-		HTTP: http,
+		HTTP: httpSrv,
 	}
 }
 
 func (s *Server) Run() error {
-	return s.HTTP.Run(":8080")
+	log.Println("http server started")
+	return s.HTTP.ListenAndServe()
+}
+
+func (s *Server) Shutdown(ctx context.Context) error {
+	log.Println("shutting down server...")
+
+	if err := s.HTTP.Shutdown(ctx); err != nil {
+		return err
+	}
+
+	log.Println("server shutdown complete")
+	return nil
 }
