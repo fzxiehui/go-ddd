@@ -17,7 +17,7 @@ func InitSQLite(opt DBConfig) (*gorm.DB, error) {
 		return nil, err
 	}
 
-	// 统一做迁移（infra 层允许）
+	// 统一迁移
 	if err := db.AutoMigrate(
 		&userinfra.UserPO{},
 	); err != nil {

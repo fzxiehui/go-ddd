@@ -23,12 +23,16 @@ func NewLoginService(
 	}
 }
 
+// 登录接口
 func (s *LoginService) Login(username, password string) (*user.User, error) {
+
+	// 从数据库中读取 用户 domain 抽象 接口 由 infra 实现
 	u, err := s.repo.FindByUsername(username)
 	if err != nil {
 		return nil, err
 	}
 
+	// domain 密码校验
 	if err := u.CheckPassword(s.hashFn, password); err != nil {
 		return nil, err
 	}
