@@ -4,15 +4,12 @@ import (
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 
+	"ddd/internal/config"
 	userinfra "ddd/internal/infra/user"
 )
 
-type DBConfig struct {
-	Path string
-}
-
-func InitSQLite(opt DBConfig) (*gorm.DB, error) {
-	db, err := gorm.Open(sqlite.Open(opt.Path), &gorm.Config{})
+func InitSQLite(cfg *config.Config) (*gorm.DB, error) {
+	db, err := gorm.Open(sqlite.Open(cfg.DB.Name), &gorm.Config{})
 	if err != nil {
 		return nil, err
 	}

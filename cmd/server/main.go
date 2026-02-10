@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"ddd/internal/config"
 	"log"
 	"os"
 	"os/signal"
@@ -10,7 +11,8 @@ import (
 )
 
 func main() {
-	app, err := InitServer()
+	cfg, err := config.Load("")
+	app, err := InitServer(cfg)
 	if err != nil {
 		panic(err)
 	}
