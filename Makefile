@@ -11,7 +11,7 @@ help:
 	@echo "    make test"
 
 wire:
-	wire ./cmd/server
+	wire ./cmd/server/cmd/
 
 build:
 	go build -o bin/$(APP_NAME) ./cmd/server
