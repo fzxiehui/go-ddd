@@ -13,7 +13,7 @@ func Load(configFile string) (*Config, error) {
 
 	// 1. 默认值（兜底）
 	v.SetDefault("http.port", 8080)
-	v.SetDefault("db.name", fmt.Sprintf("%s", project_name))
+	v.SetDefault("db.name", "test.db")
 
 	// 2. 显式配置文件（可选）
 	if configFile != "" {
