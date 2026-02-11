@@ -5,15 +5,20 @@ import (
 
 	"ddd/internal/domain/user"
 	"ddd/internal/infra/db"
+	"ddd/internal/infra/security"
 	userinfra "ddd/internal/infra/user"
-	"ddd/pkg/crypto"
 )
 
 var Set = wire.NewSet(
 
 	// config
-	wire.Value(db.DBConfig{Path: "test.db"}),
-	wire.Value(crypto.SHA256),
+	// wire.Value(db.DBConfig{Path: "test.db"}),
+	// wire.Value(crypto.SHA256),
+	security.NewBcryptPasswordHasher,
+	wire.Bind(
+		new(user.PasswordHasher),
+		new(*security.BcryptPasswordHasher),
+	),
 
 	// db
 	db.InitSQLite,

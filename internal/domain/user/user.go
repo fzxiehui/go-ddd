@@ -10,16 +10,16 @@ type User struct {
 	PasswordHash string
 }
 
-var (
-	ErrInvalidPassword = errors.New("invalid password")
-)
+// var (
+// 	ErrInvalidPassword = errors.New("invalid password")
+// )
 
-func (u *User) CheckPassword(hashFn func(string) string, password string) error {
-	if u.PasswordHash != hashFn(password) {
-		return ErrInvalidPassword
-	}
-	return nil
-}
+// func (u *User) CheckPassword(hashFn func(string) string, password string) error {
+// 	if u.PasswordHash != hashFn(password) {
+// 		return ErrInvalidPassword
+// 	}
+// 	return nil
+// }
 
 var (
 	ErrUsernameEmpty = errors.New("username empty")
@@ -30,7 +30,6 @@ func NewUser(
 	id string,
 	username string,
 	rawPassword string,
-	hashFn func(string) string,
 	policy PasswordPolicy,
 ) (*User, error) {
 
@@ -48,6 +47,6 @@ func NewUser(
 	return &User{
 		ID:           id,
 		Username:     username,
-		PasswordHash: hashFn(rawPassword),
+		PasswordHash: rawPassword,
 	}, nil
 }

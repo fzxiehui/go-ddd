@@ -18,6 +18,8 @@ func Load(configFile string) (*Config, error) {
 	v.SetDefault("jwt.secret", project_name)
 	v.SetDefault("jwt.expire", "24h")
 
+	v.SetDefault("security.cost", 12)
+
 	// 2. 显式配置文件（可选）
 	if configFile != "" {
 		v.SetConfigFile(configFile)

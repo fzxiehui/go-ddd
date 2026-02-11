@@ -10,20 +10,20 @@ import (
 
 // 注册服务
 type LoginService struct {
-	repo         user.Repository     // domain.Repository 抽象存储对象
-	TokenService *auth.TokenService  // token 服务
-	hashFn       func(string) string // 密码生成函数
+	repo         user.Repository    // domain.Repository 抽象存储对象
+	TokenService *auth.TokenService // token 服务
+	hasher       user.PasswordHasher
 }
 
 func NewLoginService(
 	repo user.Repository,
 	tokenService *auth.TokenService,
-	hashFn func(string) string,
+	hasher user.PasswordHasher,
 ) *LoginService {
 	return &LoginService{
 		repo:         repo,
-		hashFn:       hashFn,
 		TokenService: tokenService,
+		hasher:       hasher,
 	}
 }
 
@@ -37,7 +37,11 @@ func (s *LoginService) Login(username, password string) (string, *user.User, err
 	}
 
 	// domain 密码校验
-	if err := u.CheckPassword(s.hashFn, password); err != nil {
+	// if err := u.CheckPassword(s.hashFn, password); err != nil {
+	// 	return "", nil, err
+	// }
+	err = s.hasher.Compare(u.PasswordHash, password)
+	if err != nil {
 		return "", nil, err
 	}
 	token, err := s.TokenService.Generate(u.ID)
@@ -50,18 +54,18 @@ var (
 
 type RegisterService struct {
 	repo   user.Repository
-	hashFn func(string) string
+	hasher user.PasswordHasher
 	policy user.PasswordPolicy
 }
 
 func NewRegisterService(
 	repo user.Repository,
-	hashFn func(string) string,
+	hasher user.PasswordHasher,
 	policy user.PasswordPolicy,
 ) *RegisterService {
 	return &RegisterService{
 		repo:   repo,
-		hashFn: hashFn,
+		hasher: hasher,
 		policy: policy,
 	}
 }
@@ -75,12 +79,14 @@ func (s *RegisterService) Register(
 		return nil, ErrUserAlreadyExists
 	}
 
+	// 2. 创建加密后的密码
+	hashed, err := s.hasher.Hash(password)
+
 	// 2. 创建领域对象
 	u, err := user.NewUser(
 		uuid.NewString(),
 		username,
-		password,
-		s.hashFn,
+		hashed,
 		s.policy,
 	)
 	if err != nil {
