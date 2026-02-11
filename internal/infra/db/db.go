@@ -17,7 +17,13 @@ func InitSQLite(cfg *config.Config) (*gorm.DB, error) {
 	// 统一迁移
 	if err := db.AutoMigrate(
 		&userinfra.UserPO{},
+		&userinfra.PasswordPolicyPO{},
 	); err != nil {
+		return nil, err
+	}
+
+	// 初始化默认数据
+	if err := userinfra.EnsureDefaultPasswordPolicy(db); err != nil {
 		return nil, err
 	}
 

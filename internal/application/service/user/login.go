@@ -1,6 +1,7 @@
 package service
 
 import (
+	"ddd/internal/application/service/auth"
 	"ddd/internal/domain/user"
 	"errors"
 
@@ -9,35 +10,38 @@ import (
 
 // 注册服务
 type LoginService struct {
-	repo   user.Repository     // domain.Repository 抽象存储对象
-	hashFn func(string) string // 密码生成函数
+	repo         user.Repository     // domain.Repository 抽象存储对象
+	TokenService *auth.TokenService  // token 服务
+	hashFn       func(string) string // 密码生成函数
 }
 
 func NewLoginService(
 	repo user.Repository,
+	tokenService *auth.TokenService,
 	hashFn func(string) string,
 ) *LoginService {
 	return &LoginService{
-		repo:   repo,
-		hashFn: hashFn,
+		repo:         repo,
+		hashFn:       hashFn,
+		TokenService: tokenService,
 	}
 }
 
 // 登录接口
-func (s *LoginService) Login(username, password string) (*user.User, error) {
+func (s *LoginService) Login(username, password string) (string, *user.User, error) {
 
 	// 从数据库中读取 用户 domain 抽象 接口 由 infra 实现
 	u, err := s.repo.FindByUsername(username)
 	if err != nil {
-		return nil, err
+		return "", nil, err
 	}
 
 	// domain 密码校验
 	if err := u.CheckPassword(s.hashFn, password); err != nil {
-		return nil, err
+		return "", nil, err
 	}
-
-	return u, nil
+	token, err := s.TokenService.Generate(u.ID)
+	return token, u, err
 }
 
 var (

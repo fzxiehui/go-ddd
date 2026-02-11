@@ -24,14 +24,14 @@ func (h *LoginHandler) Login(c *gin.Context) {
 		return
 	}
 
-	u, err := h.svc.Login(req.Username, req.Password)
+	token, u, err := h.svc.Login(req.Username, req.Password)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "login failed"})
 		return
 	}
 
 	c.JSON(http.StatusOK, dto.LoginResp{
-		UserID:   u.ID,
-		Username: u.Username,
+		UserID: u.ID,
+		Token:  token,
 	})
 }
