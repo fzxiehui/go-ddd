@@ -43,3 +43,18 @@ go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.3.0
 ```shell
 go get google.golang.org/grpc@v1.62.2
 ```
+
+- 测试
+
+```shell
+# login
+grpcurl -plaintext \
+  -d '{"username":"root","password":"root"}' \
+  localhost:9090 user.v1.AuthService/Login
+
+# get me
+grpcurl -plaintext \
+-H "authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMzhlZTczMTQtN2ExMC00ZTZjLWI1NDMtYzUzMjhkMzUxYzk1IiwiZXhwIjoxNzcwOTY1OTc5LCJpYXQiOjE3NzA4Nzk1Nzl9.tmUXu-du04pFrjQ29L1mMs3gPRi40U5MuNZXwPJc8mQ" \
+-d '{}' \
+localhost:9090 user.v1.AuthService/Me
+```
