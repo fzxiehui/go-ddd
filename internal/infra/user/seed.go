@@ -1,6 +1,9 @@
 package userinfra
 
 import (
+	"ddd/internal/infra/security"
+
+	"github.com/google/uuid"
 	"gorm.io/gorm"
 )
 
@@ -17,7 +20,33 @@ func EnsureDefaultPasswordPolicy(db *gorm.DB) error {
 			MinLength:     3,
 			RequireNumber: false,
 		}
-		return db.Create(&defaultPolicy).Error
+		if err := db.Create(&defaultPolicy).Error; err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func EnsureDefaultUser(db *gorm.DB,
+	bph *security.BcryptPasswordHasher) error {
+	var count int64
+	if err := db.Model(&UserPO{}).Where("username == ?", "root").Count(&count).Error; err != nil {
+		return err
+	}
+	if count == 0 {
+		password, err := bph.Hash("root")
+		if err != nil {
+			return nil
+		}
+		root := UserPO{
+			ID:           uuid.NewString(),
+			Username:     "root",
+			PasswordHash: password,
+		}
+		if err := db.Create(&root).Error; err != nil {
+			return err
+		}
 	}
 
 	return nil
