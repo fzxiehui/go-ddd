@@ -101,3 +101,16 @@ func (s *RegisterService) Register(
 
 	return u, nil
 }
+
+func (s *LoginService) GetByID(ctx context.Context,
+	id string) (*user.User, error) {
+	u, err := s.repo.FindByID(ctx, id)
+	if err != nil {
+		return nil, err
+	}
+
+	return &user.User{
+		ID:       u.ID,
+		Username: u.Username,
+	}, nil
+}

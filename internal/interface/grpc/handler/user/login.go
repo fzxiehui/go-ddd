@@ -5,6 +5,7 @@ import (
 
 	userv1 "ddd/api/gen/user/v1"
 	user "ddd/internal/application/service/user"
+	"ddd/internal/interface/grpc/middleware"
 )
 
 type AuthHandler struct {
@@ -31,5 +32,23 @@ func (h *AuthHandler) Login(
 	return &userv1.LoginReply{
 		UserId: u.ID,
 		Token:  token,
+	}, nil
+}
+
+func (h *AuthHandler) Me(
+	ctx context.Context,
+	req *userv1.MeRequest,
+) (*userv1.MeReply, error) {
+
+	userID := ctx.Value(middleware.UserIDKey).(string)
+
+	user, err := h.loginService.GetByID(ctx, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &userv1.MeReply{
+		UserId:   user.ID,
+		Username: user.Username,
 	}, nil
 }

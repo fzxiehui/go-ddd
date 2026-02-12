@@ -6,6 +6,7 @@ option go_package = "api/gen/user/v1;userv1";
 
 service AuthService {
   rpc Login (LoginRequest) returns (LoginReply);
+	rpc Me (MeRequest) returns (MeReply);
 }
 
 message LoginRequest {
@@ -18,3 +19,9 @@ message LoginReply {
   string token   = 2;
 }
 
+message MeRequest {}
+
+message MeReply {
+  string user_id = 1;
+  string username = 2;
+}

@@ -4,7 +4,9 @@ import (
 	"net"
 
 	userv1 "ddd/api/gen/user/v1"
+	"ddd/internal/application/service/auth"
 	"ddd/internal/interface/grpc/handler/user"
+	"ddd/internal/interface/grpc/middleware"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
@@ -14,8 +16,13 @@ type GRPCServer struct {
 	server *grpc.Server
 }
 
-func NewGRPCServer(authHandler *user.AuthHandler) *GRPCServer {
-	s := grpc.NewServer()
+func NewGRPCServer(authHandler *user.AuthHandler,
+	tokenSvc *auth.TokenService) *GRPCServer {
+	s := grpc.NewServer(
+		grpc.UnaryInterceptor(
+			middleware.JWTUnaryInterceptor(tokenSvc),
+		),
+	)
 
 	reflection.Register(s)
 

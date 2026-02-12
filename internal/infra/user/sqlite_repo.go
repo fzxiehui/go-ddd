@@ -1,6 +1,7 @@
 package userinfra
 
 import (
+	"context"
 	"errors"
 
 	"gorm.io/gorm"
@@ -49,4 +50,24 @@ func (r *SQLiteRepo) Save(u *user.User) error {
 		PasswordHash: u.PasswordHash,
 	}
 	return r.db.Create(&po).Error
+}
+
+/*
+ * 通过 id 查找用户
+ */
+func (r *SQLiteRepo) FindByID(ctx context.Context, id string) (*user.User, error) {
+	var po UserPO
+	err := r.db.Where("id = ?", id).First(&po).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, err
+		}
+		return nil, err
+	}
+
+	return &user.User{
+		ID:           po.ID,
+		Username:     po.Username,
+		PasswordHash: po.PasswordHash,
+	}, nil
 }
