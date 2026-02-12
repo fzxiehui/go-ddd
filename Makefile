@@ -1,4 +1,4 @@
-.PHONY: help test build run wire build-arm64
+.PHONY: help test build run wire build-arm64 proto
 
 default: help
 
@@ -34,3 +34,9 @@ run: wire build
 
 test:
 	go test -v -count=1 ./...
+
+proto:
+	protoc \
+		--go_out=. \
+		--go-grpc_out=. \
+		api/proto/user/v1/auth.proto

@@ -3,6 +3,7 @@ package wireserver
 import (
 	"github.com/google/wire"
 
+	"ddd/internal/interface/grpc"
 	"ddd/internal/interface/http"
 	"ddd/internal/server/server"
 )
@@ -10,4 +11,5 @@ import (
 var Set = wire.NewSet(
 	http.NewHTTPServer,
 	server.NewServer,
+	grpc.NewGRPCServer,
 )

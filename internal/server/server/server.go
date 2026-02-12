@@ -2,18 +2,20 @@ package server
 
 import (
 	"context"
+	"ddd/internal/interface/grpc"
 	"log"
 	"net/http"
 )
 
 type Server struct {
 	HTTP *http.Server
-	// GRPC *grpc.Server   // TODO
+	GRPC *grpc.GRPCServer
 }
 
-func NewServer(httpSrv *http.Server) *Server {
+func NewServer(httpSrv *http.Server, grpcSrv *grpc.GRPCServer) *Server {
 	return &Server{
 		HTTP: httpSrv,
+		GRPC: grpcSrv,
 	}
 }
 
@@ -31,4 +33,9 @@ func (s *Server) Shutdown(ctx context.Context) error {
 
 	log.Println("server shutdown complete")
 	return nil
+}
+
+func (s *Server) RunGrpc() error {
+	log.Println("grpc server started")
+	return s.GRPC.Start(":9090")
 }

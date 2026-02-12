@@ -1,6 +1,7 @@
 package service
 
 import (
+	"context"
 	"ddd/internal/application/service/auth"
 	"ddd/internal/domain/user"
 	"errors"
@@ -28,7 +29,7 @@ func NewLoginService(
 }
 
 // 登录接口
-func (s *LoginService) Login(username, password string) (string, *user.User, error) {
+func (s *LoginService) Login(ctx context.Context, username, password string) (string, *user.User, error) {
 
 	// 从数据库中读取 用户 domain 抽象 接口 由 infra 实现
 	u, err := s.repo.FindByUsername(username)

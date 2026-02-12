@@ -30,6 +30,12 @@ var serveCmd = &cobra.Command{
 			}
 		}()
 
+		go func() {
+			if err := app.RunGrpc(); err != nil {
+				log.Println("server stopped:", err)
+			}
+		}()
+
 		// 监听退出信号
 		quit := make(chan os.Signal, 1)
 		signal.Notify(quit, syscall.SIGINT, syscall.SIGTERM)

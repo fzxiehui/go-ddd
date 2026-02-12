@@ -31,3 +31,15 @@ go get github.com/google/wire@v0.6.0
 export DDD_HTTP_PORT=8080
 export DDD_DB_NAME=test.db
 ```
+
+## grpc
+
+```shell
+sudo apt  install protobuf-compiler
+go install google.golang.org/protobuf/cmd/protoc-gen-go@v1.33.0
+go install google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.3.0
+```
+
+```shell
+go get google.golang.org/grpc@v1.62.2
+```
