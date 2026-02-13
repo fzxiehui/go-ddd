@@ -1,6 +1,7 @@
 package userinfra
 
 import (
+	"ddd/internal/domain/user"
 	"errors"
 
 	"gorm.io/gorm"
@@ -13,7 +14,7 @@ type DBPasswordPolicy struct {
 	db *gorm.DB // grom 对象
 }
 
-func NewDBPasswordPolicy(db *gorm.DB) *DBPasswordPolicy {
+func NewDBPasswordPolicy(db *gorm.DB) user.PasswordPolicy {
 	return &DBPasswordPolicy{db: db}
 }
 

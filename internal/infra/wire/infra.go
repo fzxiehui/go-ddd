@@ -3,7 +3,6 @@ package wireinfra
 import (
 	"github.com/google/wire"
 
-	"ddd/internal/domain/user"
 	"ddd/internal/infra/db"
 	"ddd/internal/infra/security"
 	userinfra "ddd/internal/infra/user"
@@ -15,25 +14,13 @@ var Set = wire.NewSet(
 	// wire.Value(db.DBConfig{Path: "test.db"}),
 	// wire.Value(crypto.SHA256),
 	security.NewBcryptPasswordHasher,
-	wire.Bind(
-		new(user.PasswordHasher),
-		new(*security.BcryptPasswordHasher),
-	),
 
 	// db
 	db.InitSQLite,
 
 	// repo
 	userinfra.NewSQLiteRepo,
-	wire.Bind(
-		new(user.Repository),
-		new(*userinfra.SQLiteRepo),
-	),
 
 	// policy
 	userinfra.NewDBPasswordPolicy,
-	wire.Bind(
-		new(user.PasswordPolicy),
-		new(*userinfra.DBPasswordPolicy),
-	),
 )

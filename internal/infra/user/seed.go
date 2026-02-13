@@ -1,7 +1,7 @@
 package userinfra
 
 import (
-	"ddd/internal/infra/security"
+	"ddd/internal/domain/user"
 
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -29,7 +29,7 @@ func EnsureDefaultPasswordPolicy(db *gorm.DB) error {
 }
 
 func EnsureDefaultUser(db *gorm.DB,
-	bph *security.BcryptPasswordHasher) error {
+	bph user.PasswordHasher) error {
 	var count int64
 	if err := db.Model(&UserPO{}).Where("username == ?", "root").Count(&count).Error; err != nil {
 		return err

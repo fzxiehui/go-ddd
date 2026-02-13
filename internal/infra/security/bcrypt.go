@@ -2,6 +2,7 @@ package security
 
 import (
 	"ddd/internal/config"
+	"ddd/internal/domain/user"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -10,8 +11,10 @@ type BcryptPasswordHasher struct {
 	cost int
 }
 
-func NewBcryptPasswordHasher(cfg *config.Config) *BcryptPasswordHasher {
-	return &BcryptPasswordHasher{}
+func NewBcryptPasswordHasher(cfg *config.Config) user.PasswordHasher {
+	return &BcryptPasswordHasher{
+		cost: cfg.Security.Cost,
+	}
 }
 
 func (b *BcryptPasswordHasher) Hash(password string) (string, error) {

@@ -16,7 +16,7 @@ type SQLiteRepo struct {
 	db *gorm.DB
 }
 
-func NewSQLiteRepo(db *gorm.DB) *SQLiteRepo {
+func NewSQLiteRepo(db *gorm.DB) user.Repository {
 	return &SQLiteRepo{db: db}
 }
 

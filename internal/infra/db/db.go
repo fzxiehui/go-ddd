@@ -5,12 +5,12 @@ import (
 	"gorm.io/gorm"
 
 	"ddd/internal/config"
-	"ddd/internal/infra/security"
+	"ddd/internal/domain/user"
 	userinfra "ddd/internal/infra/user"
 )
 
 func InitSQLite(cfg *config.Config,
-	bph *security.BcryptPasswordHasher) (*gorm.DB, error) {
+	bph user.PasswordHasher) (*gorm.DB, error) {
 	db, err := gorm.Open(sqlite.Open(cfg.DB.Name), &gorm.Config{})
 	if err != nil {
 		return nil, err
