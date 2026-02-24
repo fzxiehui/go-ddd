@@ -40,3 +40,7 @@ func (g *GRPCServer) Start(addr string) error {
 	}
 	return g.server.Serve(lis)
 }
+
+func (g *GRPCServer) Shutdown() {
+	g.server.Stop()
+}
