@@ -14,10 +14,20 @@ import (
 
 /*
  * 启动服务
+ *
  *	step 1 : 加载 配置文件
+ *
  *	step 2 : 启动 http 服务, GRPC 服务, 定时任务管理器
+ *	step 2.1 : 启动 http 服务
+ *	step 2.2 : 启动 grpc 服务
+ *	step 2.3 : 启动 定时任务管理器
+ *
  *	step 3 : 等待 退出信息号
+ *
  *	step 4 : 退出 http 服务, GRPC 服务, 定时任务管理器
+ *	step 4.1 : 退出 http 服务
+ *	step 4.2 : 退出 GRPC 服务
+ *	step 4.3 : 退出 定时任务管理器
  */
 var serveCmd = &cobra.Command{
 	Use:   "serve",
@@ -36,21 +46,21 @@ var serveCmd = &cobra.Command{
 		/*
 		 * step 2 : 启动 http 服务, GRPC 服务, 定时任务管理器
 		 */
-		// 2.1 启动 http 服务
+		// step 2.1 : 启动 http 服务
 		go func() {
 			if err := app.RunHTTP(); err != nil {
 				log.Println("server stopped:", err)
 			}
 		}()
 
-		// 2.2 启动 grpc 服务
+		// step 2.2 : 启动 grpc 服务
 		go func() {
 			if err := app.RunGrpc(); err != nil {
 				log.Println("server stopped:", err)
 			}
 		}()
 
-		// 2.3 启动 定时任务管理器
+		// step 2.3 : 启动 定时任务管理器
 		app.RunScheduler()
 
 		/*
@@ -68,15 +78,15 @@ var serveCmd = &cobra.Command{
 		 * step 4 : 退出 http 服务, GRPC 服务, 定时任务管理器
 		 */
 
-		// 4.1 退出 http 服务
+		// step 4.1 : 退出 http 服务
 		if err := app.ShutdownHTTP(ctx); err != nil {
 			log.Println("forced shutdown:", err)
 		}
 
-		// 4.2 退出 GRPC 服务
+		// step 4.2 : 退出 GRPC 服务
 		app.ShutdownGrpc()
 
-		// 4.3 退出 定时任务管理器
+		// step 4.3 : 退出 定时任务管理器
 		app.ShutdownScheduler()
 		return nil
 
