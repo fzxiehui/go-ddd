@@ -2,13 +2,13 @@
 
 ## 依赖关系限制
 
-
-| 层级 | 允许依赖 | 绝对不能依赖 |
-| :-----: | :------ | :----------- |
-| `interface`   | `application`、`domain` | `infra` |
-| `application` | `domain` | `interface`、`infra` |
-| `domain` | `不允许` | `无依赖` |
-| `infra` | `domain` | `application`、`interface` |
+| 层 | 可以依赖 | 不能依赖 | 说明 |
+| :------ | :---- | :---- | :------- |
+| `domain` | `标准库` | `application` / `infra` / `interface` | 最纯粹业务规则 |
+| `application` | `domain` | `interface` | 用例编排层 |
+| `infra` | `domain` | `interface`  | 技术实现层 |
+| `interface` | `application` / `domain(dto)` | `infra` | 对外适配层 |
+| `cmd/server`  | 所有层 | 无限制 | 装配层 |
 
 ## 登录测试
 
