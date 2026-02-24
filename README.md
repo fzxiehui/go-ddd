@@ -1,4 +1,14 @@
-# DDD 项目构建
+# ddd 项目构建
+
+## 依赖关系限制
+
+
+| 层级 | 允许依赖 | 绝对不能依赖 |
+| :-----: | :------ | :----------- |
+| `interface`   | `application`、`domain` | `infra` |
+| `application` | `domain` | `interface`、`infra` |
+| `domain` | `不允许` | `无依赖` |
+| `infra` | `domain` | `application`、`interface` |
 
 ## 登录测试
 

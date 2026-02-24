@@ -13,7 +13,7 @@ var (
 
 var rootCmd = &cobra.Command{
 	Use:   "ddd",
-	Short: "ddd example service",
+	Short: "ddd service",
 }
 
 func Execute() {
