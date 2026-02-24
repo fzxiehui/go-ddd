@@ -6,7 +6,7 @@
 | :------ | :---- | :---- | :------- |
 | `domain` | `标准库` | `application` / `infra` / `interface` | 最纯粹业务规则 |
 | `application` | `domain` | `interface` | 用例编排层 |
-| `infra` | `domain` | `interface`  | 技术实现层 |
+| `infra` | `domain` / `application（事件回调场景允许）` | `interface`  | 技术实现层 |
 | `interface` | `application` / `domain(dto)` | `infra` | 对外适配层 |
 | `cmd/server`  | 所有层 | 无限制 | 装配层 |
 
