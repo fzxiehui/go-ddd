@@ -29,6 +29,7 @@ func NewServer(
  * 开启定时任务
  */
 func (s *Server) RunScheduler() {
+	log.Println("scheduler started")
 	s.Scheduler.Start()
 	// 定时任务 TODO: 后续加到 handler中
 	// s.Scheduler.AddJob(
@@ -45,6 +46,7 @@ func (s *Server) RunScheduler() {
  */
 func (s *Server) ShutdownScheduler() {
 	s.Scheduler.Stop()
+	log.Println("scheduler shutdown complete")
 }
 
 /*
@@ -65,7 +67,7 @@ func (s *Server) ShutdownHTTP(ctx context.Context) error {
 		return err
 	}
 
-	log.Println("server shutdown complete")
+	log.Println("http server shutdown complete")
 	return nil
 }
 
@@ -83,6 +85,6 @@ func (s *Server) RunGrpc() error {
 func (s *Server) ShutdownGrpc() error {
 	log.Println("shutting down grpc server ...")
 	s.GRPC.Shutdown()
-	log.Println("server shutdown complete")
+	log.Println("grpc server shutdown complete")
 	return nil
 }
